@@ -2,6 +2,7 @@ import React from 'react';
 import { DAYS_OF_THE_WEEK } from '../helpers/days';
 import { Box, Flex, Spacer, Text } from '@chakra-ui/react';
 import { CURR_MONTH, CURR_YEAR } from '../helpers/currdate';
+import { Button } from 'semantic-ui-react';
 
 
 
@@ -62,7 +63,19 @@ function Day({ day,
                 }
         }
     }
-        
+    const buttonAdd = (marked) => {
+        if (day.id.getDate() === marked) {
+            return {
+                display: 'block',
+                h: '1vw',
+                w: '1vw',
+                borderRadius: '50%',
+                bg: 'blue.100',
+                color: 'white'
+            }
+                
+        }
+    }    
     
     return (
         <Box sx={choosedDay(marked, month)}
@@ -72,7 +85,7 @@ function Day({ day,
             bg={markedColor(currmonth, curryear, today, month)}
             // borderWidth='1px'
             height='10vw'
-            onClick={() => { handleMarked(day.id.getDate()); console.log(day.id.getMonth(),day.id.getDate(), month) }}
+            onClick={() => { handleMarked(day.id.getDate()); }}
             _hover={{
                 
                 boxShadow:'outline', 
@@ -86,7 +99,20 @@ function Day({ day,
                     <Spacer/>
                     <Box><Text sx={markedText(marked)}>{DAYS_OF_THE_WEEK[day.id.getDay()]}</Text></Box>
                 
+            </Flex>
+            <Spacer />
+            <Flex alignItems='center' justifyContent='center'>
+            <Box as='button'
+                display='block'
+                h='2vw'
+                w='2vw'
+                borderRadius='50%'
+                bg='blue.200'
+                color='white'
+                boxShadow='lg'
+            >+</Box>
             </Flex>    
+                
         </Box>
   )
 }

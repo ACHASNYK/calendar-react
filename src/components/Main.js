@@ -13,7 +13,7 @@ import {
     Button,
     chakra
 } from '@chakra-ui/react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getMonth } from '../helpers/utils';
 import { FiChevronLeft } from 'react-icons/fi';
 import { FiChevronRight } from 'react-icons/fi';
@@ -24,20 +24,7 @@ import Day from './Day';
 const ArrowLeft = chakra(FiChevronLeft);
 const AArrowRight = chakra(FiChevronRight)
 
-// let firstMonthDay = (new Date(2022, 8)).getDay();
 
-// let daysOfMonth = (year, month) => { 
-//         return 32 - new Date(year, month, 32).getDate();
-//     } 
-// const displayCalendar = (year, month) => {
-//     let i,y = 0;
-//     for (i === 0; i < 6; i++) {
-//         for (y === 0; y < 7; y++) {
-            
-//         }
-//     }  
-// };
-    // const data = daysOfMonth(2020, 1);
 function Main() {
     
     const [value, setValue] = useState({
@@ -47,7 +34,7 @@ function Main() {
     
     const [marked, setMarked] = useState(); 
     
-    const month = getMonth(value.month, value.year);
+    const month = getMonth(value?.month, value?.year);
     
     const plusClick = () => {
         if (value.month < 11) {
@@ -73,7 +60,7 @@ function Main() {
         console.log(e)
     }
     
-   
+//    useEffect(handleDatePick, [])
 
     return (
         <Center>
@@ -98,7 +85,7 @@ function Main() {
                                 borderRadius='lg'
                                
                                 minWidth='7vw'>
-                                {MONTHS[value.month]} {value.year}</Box>
+                                {MONTHS[value?.month]} {value?.year}</Box>
                             <IconButton
                                 aria-label='plus'
                                 bg='gray.100'
@@ -106,7 +93,7 @@ function Main() {
                                 icon={<AArrowRight w='2em' h='2em'/>}
                                 onClick={() => plusClick()}
                             ></IconButton>
-                            <DatePicker/>
+                            <DatePicker handleDatePick={ handleDatePick} />
                         </Flex>
                     </Flex>
                     
@@ -117,10 +104,9 @@ function Main() {
                             {week.map((day) => (<Day
                                 day={day}
                                 marked={marked}
-                                handleMarked={handleMarked}
-                                handleDatePick={handleDatePick}
-                                month={value.month}
-                                year={value.year}
+                                handleMarked={handleMarked}                                
+                                month={value?.month}
+                                year={value?.year}
                                 today={TODAY}
                                 currmonth={CURR_MONTH}
                                 curryear={CURR_YEAR}

@@ -32,10 +32,11 @@ const ArrowLeft = chakra(FiChevronLeft);
 const ArrowRight = chakra(FiChevronRight);
 const AArrowLeft = chakra(FiChevronsLeft);
 const AArrowRight = chakra(FiChevronsRight);
-function DatePicker() {
+
+function DatePicker({ handleDatePick }) {
   const [value, setValue] = useState({
-        // month: new Date().getMonth(),
-        // year: new Date().getFullYear()
+        month: new Date().getMonth(),
+        year: new Date().getFullYear()
   });
   
   const handleStorage = () => {
@@ -58,13 +59,18 @@ function DatePicker() {
                 { setValue({...value, year: 2022})}
     
   }
+
+  const handleValue = (e) => {
+    setValue({ ...value, month: e });
+    
+   }
   const arrowsize = {
     h: '1.5em',
     w: '1.5em',
     
   }
-  // const { isOpen, onToggle, onClose } = useDisclosure();
-  useEffect(handleStorage, []);
+  
+  useEffect(() => { handleDatePick(value) }, [value, handleDatePick]);
 
   return (
     <Popover >
@@ -111,7 +117,7 @@ function DatePicker() {
                                 aria-label='plus'
                                 bg='blue.100'
                                 size='xs'
-                                icon={<AArrowRight sx={ arrowsize} />}
+                                icon={<AArrowRight sx={arrowsize} />}
                                 onClick={() => plusClick(10)}
                             ></IconButton>
                             
@@ -127,7 +133,7 @@ function DatePicker() {
             justifyContent='center'
         
           >
-            {/* <SimpleGrid columns={3} gap='.5vh'  ></SimpleGrid> */}
+            
             {Object.keys(MON).map((e, i) => (<Box 
               key={i}
               textAlign='center'
@@ -136,7 +142,7 @@ function DatePicker() {
               bg='gray.50'
               p='2px'
               w='3em'
-              onClick={onClose}
+              onClick={() => { handleValue(e); onClose() }}
               _hover={{
                 // background: 'blue.100',
                 // color: 'white',
