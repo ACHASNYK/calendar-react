@@ -35,7 +35,7 @@ function Main() {
     const [marked, setMarked] = useState(); 
     
     const month = getMonth(value?.month, value?.year);
-    
+    console.log(value)
     const plusClick = () => {
         if (value.month < 11) {
             setValue({ ...value, month: value.month+1 })
@@ -84,7 +84,7 @@ function Main() {
                                 borderWidth='1px'
                                 borderRadius='lg'
                                
-                                minWidth='7vw'>
+                                minWidth='8vw'>
                                 {MONTHS[value?.month]} {value?.year}</Box>
                             <IconButton
                                 aria-label='plus'
@@ -93,7 +93,7 @@ function Main() {
                                 icon={<AArrowRight w='2em' h='2em'/>}
                                 onClick={() => plusClick()}
                             ></IconButton>
-                            <DatePicker handleDatePick={ handleDatePick} />
+                            {/* <DatePicker handleDatePick={ handleDatePick} /> */}
                         </Flex>
                     </Flex>
                     
@@ -105,7 +105,7 @@ function Main() {
                                 day={day}
                                 marked={marked}
                                 handleMarked={handleMarked}                                
-                                month={value?.month}
+                                month={value.month}
                                 year={value?.year}
                                 today={TODAY}
                                 currmonth={CURR_MONTH}

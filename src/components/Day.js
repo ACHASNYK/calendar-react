@@ -1,8 +1,7 @@
 import React from 'react';
 import { DAYS_OF_THE_WEEK } from '../helpers/days';
 import { Box, Flex, Spacer, Text } from '@chakra-ui/react';
-import { CURR_MONTH, CURR_YEAR } from '../helpers/currdate';
-import { Button } from 'semantic-ui-react';
+import { CURR_MONTH, CURR_YEAR, TODAY } from '../helpers/currdate';
 
 
 
@@ -13,20 +12,53 @@ function Day({ day,
     today,
     currmonth,
     curryear}) {
-    let bg = '';
+        const dday=day.id.getDate();
+        const mmonth=day.id.getMonth();
     
-    const markedColor = (month, today) => {
-        if (day.id.getDate() === today &&
-            day.id.getMonth() === CURR_MONTH &&
-            day.id.getFullYear() === CURR_YEAR)
-        { bg = 'green.50' }
-         else if (day.id.getMonth() === month) {
-            bg = 'white'; 
-        } else { bg = 'gray.50'}
-        return bg;
-    }
+    const markedCell = (month, marked, today) => {
+        
+       
+        
+        if(day.id.getMonth()!==month) {return {bg:'gray.50'}}else if 
+        (day.id.getDate()===TODAY
+        &&day.id.getMonth()===CURR_MONTH
+        &&day.id.getFullYear()===CURR_YEAR){
+            return {bg:'green.50'}
+        }else if (day.id.getDate()===marked&&day.id.getMonth()===month){
+            return {
+                borderWidth: '2px',
+                     boxShadow: 'inner',
+                     bg: 'white',
+                     mr: '-1px',
+                     ml: '-1px',
+                     mt: '-1px',                    
+                     rounded: 'md',
+                     borderColor: 'blue.200'
+            }
+        }
+        //  else if (day.id.getDate() === marked&&day.id.getMonth()===month){
+        //     return {
+        //         borderWidth: '2px',
+        //              boxShadow: 'inner',
+        //              bg: 'white',
+        //              mr: '-1px',
+        //              ml: '-1px',
+        //              mt: '-1px',                    
+        //              rounded: 'md',
+        //              borderColor: 'blue.200'
+        //     }
+        //  } 
+        //  else if (day.id.getDate()===today&&
+        //  day.id.getMonth===CURR_MONTH&&
+        //  day.id.getFullYear===CURR_YEAR){
+        //     return {bg: 'green.50'}
+         }
+        
+        
+        
     
     const markedText = (marked) => {
+        
         if (day.id.getMonth() !== month) {
             
             return {
@@ -44,25 +76,25 @@ function Day({ day,
                 fontWeight: '600'
         } }
     }
-        const choosedDay = (marked, month) => {
-            if (day.id.getDate() === marked&&day.id.getMonth()===month) {
-                return {
-                    borderWidth: '2px',
-                    boxShadow: 'inner',
-                    bg: 'white',
-                    mr: '-1px',
-                    ml: '-1px',
-                    mt: '-1px',                    
-                    rounded: 'md',
-                    borderColor: 'blue.200'
-                    }
-            } else {
-                return {
-                    borderWidth: '1px',
+    //     const choosedDay = (marked, month) => {
+    //         if (day.id.getDate() === marked&&day.id.getMonth()===month) {
+    //             return {
+    //                 borderWidth: '2px',
+    //                 boxShadow: 'inner',
+    //                 bg: 'white',
+    //                 mr: '-1px',
+    //                 ml: '-1px',
+    //                 mt: '-1px',                    
+    //                 rounded: 'md',
+    //                 borderColor: 'blue.200'
+    //                 }
+    //         } else {
+    //             return {
+    //                 borderWidth: '1px',
                     
-                }
-        }
-    }
+    //             }
+    //     }
+    // }
     const buttonAdd = (marked) => {
         if (day.id.getDate() === marked) {
             return {
@@ -78,14 +110,15 @@ function Day({ day,
     }    
     
     return (
-        <Box sx={choosedDay(marked, month)}
+        <Box sx={markedCell(month, marked)}
+            cursor='pointer'
             display='flex'
             flexDirection='column'
             key={day.id.getDate()}
-            bg={markedColor(currmonth, curryear, today, month)}
-            // borderWidth='1px'
+            // bg={markedColor(currmonth, curryear, today, month, marked)}
+            borderWidth='1px'
             height='10vw'
-            onClick={() => { handleMarked(day.id.getDate()); }}
+            onClick={() => { handleMarked(day.id.getDate());console.log(dday, mmonth,  month) }}
             _hover={{
                 
                 boxShadow:'outline', 
@@ -100,7 +133,7 @@ function Day({ day,
                     <Box><Text sx={markedText(marked)}>{DAYS_OF_THE_WEEK[day.id.getDay()]}</Text></Box>
                 
             </Flex>
-            <Spacer />
+            {/* <Spacer />
             <Flex alignItems='center' justifyContent='center'>
             <Box as='button'
                 display='block'
@@ -111,7 +144,7 @@ function Day({ day,
                 color='white'
                 boxShadow='lg'
             >+</Box>
-            </Flex>    
+            </Flex>     */}
                 
         </Box>
   )
