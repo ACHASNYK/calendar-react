@@ -2,6 +2,8 @@ import React from 'react';
 import { DAYS_OF_THE_WEEK } from '../helpers/days';
 import { Box, Flex, Spacer, Text } from '@chakra-ui/react';
 import { CURR_MONTH, CURR_YEAR, TODAY } from '../helpers/currdate';
+import {useDispatch} from 'react-redux';
+import {set_day, set_month, set_year} from '../redux/date'
 
 
 
@@ -12,18 +14,14 @@ function Day({ day,
     today,
     currmonth,
     curryear}) {
-        const dday=day.id.getDate();
-        const mmonth=day.id.getMonth();
-    
+        
+    const dispatch = useDispatch();
     const markedCell = (month, marked, today) => {
-        
-       
-        
         if(day.id.getMonth()!==month) {return {bg:'gray.50'}}else if 
         (day.id.getDate()===TODAY
         &&day.id.getMonth()===CURR_MONTH
         &&day.id.getFullYear()===CURR_YEAR){
-            return {bg:'green.50'}
+            return {bg:'green.100'}
         }else if (day.id.getDate()===marked&&day.id.getMonth()===month){
             return {
                 borderWidth: '2px',
@@ -36,23 +34,8 @@ function Day({ day,
                      borderColor: 'blue.200'
             }
         }
-        //  else if (day.id.getDate() === marked&&day.id.getMonth()===month){
-        //     return {
-        //         borderWidth: '2px',
-        //              boxShadow: 'inner',
-        //              bg: 'white',
-        //              mr: '-1px',
-        //              ml: '-1px',
-        //              mt: '-1px',                    
-        //              rounded: 'md',
-        //              borderColor: 'blue.200'
-        //     }
-        //  } 
-        //  else if (day.id.getDate()===today&&
-        //  day.id.getMonth===CURR_MONTH&&
-        //  day.id.getFullYear===CURR_YEAR){
-        //     return {bg: 'green.50'}
-         }
+        
+        }
         
         
         
@@ -76,38 +59,8 @@ function Day({ day,
                 fontWeight: '600'
         } }
     }
-    //     const choosedDay = (marked, month) => {
-    //         if (day.id.getDate() === marked&&day.id.getMonth()===month) {
-    //             return {
-    //                 borderWidth: '2px',
-    //                 boxShadow: 'inner',
-    //                 bg: 'white',
-    //                 mr: '-1px',
-    //                 ml: '-1px',
-    //                 mt: '-1px',                    
-    //                 rounded: 'md',
-    //                 borderColor: 'blue.200'
-    //                 }
-    //         } else {
-    //             return {
-    //                 borderWidth: '1px',
-                    
-    //             }
-    //     }
-    // }
-    const buttonAdd = (marked) => {
-        if (day.id.getDate() === marked) {
-            return {
-                display: 'block',
-                h: '1vw',
-                w: '1vw',
-                borderRadius: '50%',
-                bg: 'blue.100',
-                color: 'white'
-            }
-                
-        }
-    }    
+   
+    
     
     return (
         <Box sx={markedCell(month, marked)}
@@ -118,7 +71,9 @@ function Day({ day,
             // bg={markedColor(currmonth, curryear, today, month, marked)}
             borderWidth='1px'
             height='10vw'
-            onClick={() => { handleMarked(day.id.getDate());console.log(dday, mmonth,  month) }}
+            onClick={() =>  {dispatch(set_day(day.id.getDate())); 
+                dispatch(set_month(day.id.getMonth()));
+            dispatch(set_year(day.id.getFullYear()))}}
             _hover={{
                 
                 boxShadow:'outline', 

@@ -22,8 +22,9 @@ import {
 } from '@chakra-ui/react';
 import {FiChevronLeft,FiChevronRight,FiChevronsLeft, FiChevronsRight } from 'react-icons/fi'
 import { MON } from '../helpers/months';  
-import { getSesStorage } from '../helpers/getStorage';  
 
+import { useDispatch } from 'react-redux/es/hooks/useDispatch';  
+import { set_day, set_month, set_year } from '../redux/date';
 
 import { chakra } from '@chakra-ui/react'
 import { GrCalendar } from 'react-icons/gr'
@@ -38,20 +39,14 @@ function DatePicker({ handleDatePick }) {
         month: new Date().getMonth(),
         year: new Date().getFullYear()
   });
+  console.log('picker', value)
   
-  const handleStorage = () => {
-    let data = getSesStorage();
-    data ? setValue(data) : setValue({
-      month: new Date().getMonth(),
-      year: new Date().getFullYear()
-    })
-
-  }
 
   const plusClick = (e) => {
     if (value.year > 0&&value.year < 2100) {
       setValue({ ...value, year: value.year + e })
-    } else { setValue({ ...value, year: 2022 }) }
+    } else { setValue({ ...value, year: 2022 })}
+    
   }
     const minusClick = (e) => {
       if(value.year>0)
@@ -59,10 +54,11 @@ function DatePicker({ handleDatePick }) {
                 { setValue({...value, year: 2022})}
     
   }
-
+  const dispatch = useDispatch();
   const handleValue = (e) => {
     setValue({ ...value, month: e });
-    
+    dispatch(set_month(e));
+    dispatch(set_year(value.year))
    }
   const arrowsize = {
     h: '1.5em',
@@ -70,7 +66,7 @@ function DatePicker({ handleDatePick }) {
     
   }
   
-  useEffect(() => { handleDatePick(value) }, [value, handleDatePick]);
+  // useEffect(() => { handleDatePick(value) }, [value, handleDatePick]);
 
   return (
     <Popover >
@@ -79,7 +75,7 @@ function DatePicker({ handleDatePick }) {
       <PopoverTrigger>
        <IconButton size='sm' borderWidth='1px'  icon={<CalendarIcon w='1em' h='1em' bg='gray.100'></CalendarIcon>} ></IconButton>
       </PopoverTrigger>
-      <PopoverContent w='10vw' minW='200px'>
+      <PopoverContent w='10vw' minW='12vw'>
       <PopoverArrow />
         <PopoverHeader>
           <Flex alignItems='center' flexDirection='row' gap='3px' justifyContent='space-around'>
@@ -142,7 +138,7 @@ function DatePicker({ handleDatePick }) {
               bg='gray.50'
               p='2px'
               w='3em'
-              onClick={() => { handleValue(e); onClose() }}
+              onClick={() => { handleValue(i); onClose() }}
               _hover={{
                 // background: 'blue.100',
                 // color: 'white',
