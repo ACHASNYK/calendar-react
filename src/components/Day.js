@@ -1,9 +1,12 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { DAYS_OF_THE_WEEK } from '../helpers/days';
-import { Box, Flex, Spacer, Text } from '@chakra-ui/react';
+import { Badge, Box, Button, Center, Flex, Spacer, Text, VStack } from '@chakra-ui/react';
 import { CURR_MONTH, CURR_YEAR, TODAY } from '../helpers/currdate';
 import {useDispatch} from 'react-redux';
-import {set_day, set_month, set_year} from '../redux/date'
+import {set_day, set_month, set_year, set_id, set_date} from '../redux/date';
+import {getLocalStorage} from '../helpers/hanldeStorage';
+import dayjs from 'dayjs';
+import UpdateModal from '../components/UpdateModal'
 
 
 
@@ -14,8 +17,9 @@ function Day({ day,
     today,
     currmonth,
     curryear}) {
-        
+    // const [list, setList] = useState(getLocalStorage('task'))   
     const dispatch = useDispatch();
+    
     const markedCell = (month, marked, today) => {
         if(day.id.getMonth()!==month) {return {bg:'gray.50'}}else if 
         (day.id.getDate()===TODAY
@@ -59,7 +63,10 @@ function Day({ day,
                 fontWeight: '600'
         } }
     }
-   
+    
+    const id = dayjs(day.id).format('YYYY-MM-DD')
+    const list = getLocalStorage('task')
+    const tasks = list.filter(obj => {return obj.date===id});
     
     
     return (
@@ -73,7 +80,9 @@ function Day({ day,
             height='10vw'
             onClick={() =>  {dispatch(set_day(day.id.getDate())); 
                 dispatch(set_month(day.id.getMonth()));
-            dispatch(set_year(day.id.getFullYear()))}}
+            dispatch(set_year(day.id.getFullYear()));
+        dispatch(set_id(id));
+    dispatch(set_date(id))}}
             _hover={{
                 
                 boxShadow:'outline', 
@@ -88,18 +97,20 @@ function Day({ day,
                     <Box><Text sx={markedText(marked)}>{DAYS_OF_THE_WEEK[day.id.getDay()]}</Text></Box>
                 
             </Flex>
-            {/* <Spacer />
-            <Flex alignItems='center' justifyContent='center'>
-            <Box as='button'
-                display='block'
-                h='2vw'
-                w='2vw'
-                borderRadius='50%'
-                bg='blue.200'
-                color='white'
-                boxShadow='lg'
-            >+</Box>
-            </Flex>     */}
+            
+            
+             <Flex w='100%' flexDirection='column' gap='1vw' alignItems='center' justifyContent='center'>
+                
+            {tasks&&tasks.map(obj => (<UpdateModal time={obj.time}
+                                        title={obj.title}
+                                         date={obj.date}
+                                          desc={obj.description}
+                                           created={obj.created}
+                                           updated={obj.updated}
+                                           id={id} />))}
+           
+            </Flex>          
+           
                 
         </Box>
   )

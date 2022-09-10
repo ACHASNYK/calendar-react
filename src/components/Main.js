@@ -1,16 +1,15 @@
 import React from 'react';
-import { TODAY, CURR_MONTH, CURR_YEAR} from '../helpers/currdate';
-import { DAYS_OF_THE_WEEK } from '../helpers/days';
+import { TODAY, CURR_MONTH, CURR_YEAR, CURR_DATE} from '../helpers/currdate';
+
 import { MONTHS } from '../helpers/months';
 import {
     SimpleGrid,
     Box,
-    Container,
+    
     Center,
     Flex,
     Spacer,
-    Input,
-    Button,
+   
     chakra
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react';
@@ -35,40 +34,34 @@ function Main() {
     const [value, setValue] = useState({
         month: null,
         year: null,
-        day: null
+        day: null,
+        date: null,
     });
     
-    // const [marked, setMarked] = useState(); 
-    
+        
     const array_month = getMonth(value?.month, value?.year);
     console.log(value)
-    // const plusClick = () => {
-    //     if (value.month < 11) {
-    //         setValue({ ...value, month: value.month+1 })
-    //     } else
-    //         if (value.month === 11) { setValue({ month: 0, year: value.year + 1 }) }
-        
-    // }
-    //     const minusClick = () => {
-    //         if (value.month > 0) { setValue({ ...value, month: value.month-1 }) } else
-    //             if (value.month === 0) { setValue({ month: 11, year: value.year - 1 }) }
-                
-    // }
-
+    
     const handleDatePick = (value) => { 
         setValue(value);
         sessionStorage.setItem('Date', JSON.stringify(value));
     }
-
-    // const handleMarked = (e) => {
+    const initial = {
         
-    //     setMarked(e);
-    //     console.log(e)
-    // }
-const {day, month, year} = useSelector(state => state.date)     
- 
-    useEffect(()=>setValue({day: day, month: month, year: year})
-        , [day, month, year])
+        month: new Date().getMonth(),
+        year: new Date().getFullYear(),
+        // date, CURR_DATE
+    }
+   
+let {day, month, year} = useSelector(state => state.date);
+const storage = JSON.parse(sessionStorage.getItem('date'))||initial;
+ console.log(day, month, year)
+    useEffect(()=>{ 
+        
+        console.log(storage);
+        if(!month){setValue({day:null, month: storage?.month, year: storage?.year})}else setValue({day: day, month: month, year: year})
+    }
+        , [day,year,month,])
     return (
         <Center>
             
@@ -76,7 +69,7 @@ const {day, month, year} = useSelector(state => state.date)
                 <Box marginLeft={6} marginRight={6} minHeight='4vw'>
                     <Flex alignItems='center' p='1vw'>
                         <ModalTask/>
-                        {/* // <Button borderRadius='2vw' p='4vh' bg='blue.200' >Click & Add Task</Button> */}
+                        
                         <Spacer></Spacer>
                         <Flex alignItems='center' flexDirection='row' gap='.5vh'>
                             <IconButton
@@ -84,7 +77,7 @@ const {day, month, year} = useSelector(state => state.date)
                                 size='sm'
                                 bg='gray.100'
                                 icon={<ArrowLeft w='2em' h='2em' />}
-                                onClick={() => minusClick(setValue, value)}></IconButton>
+                                onClick={() => {minusClick(setValue, value); setSesStorage(value)}}></IconButton>
                             <Box display='flex'
                                 alignItems='center'
                                 p='3px'
@@ -99,9 +92,9 @@ const {day, month, year} = useSelector(state => state.date)
                                 bg='gray.100'
                                 size='sm'
                                 icon={<AArrowRight w='2em' h='2em'/>}
-                                onClick={() => {plusClick(setValue, value); }}
+                                onClick={() => {plusClick(setValue, value); setSesStorage(value) }}
                             ></IconButton>
-                            <DatePicker handleDatePick={ handleDatePick} />
+                            <DatePicker data={storage} />
                         </Flex>
                     </Flex>
                     
@@ -112,7 +105,7 @@ const {day, month, year} = useSelector(state => state.date)
                             {week.map((day) => (<Day
                                 day={day}
                                 marked={value?.day}
-                                // handleMarked={handleMarked}                                
+                                                              
                                 month={value?.month}
                                 year={value?.year}
                                 today={TODAY}

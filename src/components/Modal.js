@@ -16,22 +16,22 @@ function ModalTask() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <>
-      <Button borderRadius='2vw' p='4vh' bg='blue.200' onClick={onOpen} >Click & Add Task</Button>
+      <Button w='10vw' borderRadius='2vw' p='4vh' bg='blue.200' onClick={onOpen} >Click & Add Task</Button>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} closeOnOverlayClick={false} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>Add new task</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            
+            <AddTask onClose={onClose}/>
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={onClose}>
+            {/* <Button colorScheme='blue' mr={3} onClick={onClose}>
               Close
-            </Button>
-            <Button variant='ghost'>Secondary Action</Button>
+            </Button> */}
+          
           </ModalFooter>
         </ModalContent>
       </Modal>

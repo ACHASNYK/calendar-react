@@ -10,25 +10,26 @@ import {
   Flex,
   Box,
   Divider,
-  
+  Text,
   Input,
   Textarea,
   Spacer
 } from '@chakra-ui/react';
 import {useDispatch, useSelector} from 'react-redux';
-import {setLocalStorage} from '../helpers/hanldeStorage';
-import {set_title} from '../redux/date'
+import { set_updated, set_created } from '../redux/date';
+import { deleteFromLocalStorage, updateLocalStorage  } from '../helpers/hanldeStorage';
+import {BsTrash} from 'react-icons/bs'
 
 
-function AddTask({onClose}) {
+function UpdateTask({onClose, upd_time, upd_date, upd_desc, upd_created, upd_updated, upd_title, id}) {
     const [input, setInput] = useState({
-      title: '',
-      description: '',
-      date: '',
-      time: '',
-      created: '',
-      updated: ''
-
+        title: upd_title, 
+        description: upd_desc, 
+        date: upd_date, 
+        time: upd_time, 
+        created: upd_created,
+        updated: upd_updated
+    
     })
   
   const handleTitleChange = (e) => setInput({...input, title: e.target.value})
@@ -38,7 +39,7 @@ function AddTask({onClose}) {
   const dispatch = useDispatch()
   const date = useSelector(state => state.date)
   
-  useEffect(()=> {console.log(date.date); setInput({...input, date: date.date})},[date])
+  // useEffect(setInput({...input, date: date.}))
   const divider = {
     borderWidth:'2px',
     boxShadow: 'lg'
@@ -51,6 +52,8 @@ function AddTask({onClose}) {
               <FormControl isRequired isInvalid={isError }>
                  <Flex flexDirection='column' gap='4vw'> 
                    <Box>
+                    <Text fontSize='.8em'>Created {upd_created}</Text>
+                    <Text fontSize='.8em'>Updated {upd_updated}</Text>
                     <FormLabel>Title</FormLabel>
                     <Input type='text'
                       placeholder='please input the title'
@@ -113,11 +116,12 @@ function AddTask({onClose}) {
                     </Box>
                   </Flex>
                   <Flex justifyContent='flex-end'>
-                    <Button as='button' 
+                    <Button mr={3} onClick={()=>{deleteFromLocalStorage(id, input); dispatch(set_created(input.created)); onClose()}} bg='red.200'><BsTrash/></Button>
+                    <Button 
                     isDisabled={isError} 
                     bg='blue.200' 
                     mr={3} 
-                    onClick={()=>{dispatch(set_title(input.title)); setLocalStorage(input); onClose() }}
+                    onClick={()=>{ updateLocalStorage(id, input); dispatch(set_updated(input.created)); onClose() }}
                     >Save</Button>
                     </Flex>
                 </Flex>
@@ -130,4 +134,4 @@ function AddTask({onClose}) {
   )
 }
 
-export default AddTask
+export default UpdateTask

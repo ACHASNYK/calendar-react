@@ -5,11 +5,9 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverBody,
-  PopoverFooter,
+
   PopoverArrow,
-  PopoverCloseButton,
-  PopoverAnchor,
-  Button,
+  
   IconButton,
   InputGroup,
   FormControl,
@@ -28,18 +26,20 @@ import { set_day, set_month, set_year } from '../redux/date';
 
 import { chakra } from '@chakra-ui/react'
 import { GrCalendar } from 'react-icons/gr'
+import { setSesStorage } from '../helpers/hanldeStorage';
 const CalendarIcon = chakra(GrCalendar);
 const ArrowLeft = chakra(FiChevronLeft);
 const ArrowRight = chakra(FiChevronRight);
 const AArrowLeft = chakra(FiChevronsLeft);
 const AArrowRight = chakra(FiChevronsRight);
 
-function DatePicker({ handleDatePick }) {
+function DatePicker({data}) {
   const [value, setValue] = useState({
-        month: new Date().getMonth(),
-        year: new Date().getFullYear()
+        month: data?.month,
+        year: data?.year
   });
   console.log('picker', value)
+  const dispatch = useDispatch()
   
 
   const plusClick = (e) => {
@@ -52,13 +52,14 @@ function DatePicker({ handleDatePick }) {
       if(value.year>0)
             { setValue({ ...value, year: value.year-e }) } else
                 { setValue({...value, year: 2022})}
-    
+                
   }
-  const dispatch = useDispatch();
+  
   const handleValue = (e) => {
     setValue({ ...value, month: e });
     dispatch(set_month(e));
-    dispatch(set_year(value.year))
+    dispatch(set_year(value.year));
+    
    }
   const arrowsize = {
     h: '1.5em',
@@ -66,7 +67,11 @@ function DatePicker({ handleDatePick }) {
     
   }
   
-  // useEffect(() => { handleDatePick(value) }, [value, handleDatePick]);
+  
+
+  useEffect(() => { setSesStorage(value) }, [value]);
+
+  
 
   return (
     <Popover >
@@ -138,7 +143,7 @@ function DatePicker({ handleDatePick }) {
               bg='gray.50'
               p='2px'
               w='3em'
-              onClick={() => { handleValue(i); onClose() }}
+              onClick={() => { handleValue(i); onClose(); setSesStorage(value) }}
               _hover={{
                 // background: 'blue.100',
                 // color: 'white',
